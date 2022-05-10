@@ -2,6 +2,8 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
+      <router-link to="/admin">Admin</router-link>
+      <hr/>
       <router-link
         class="user-link"
         v-for="user in users"
