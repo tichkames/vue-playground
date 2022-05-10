@@ -62,9 +62,7 @@ export default {
             return `${state.user.firstName} ${state.user.lastName}`
         })
 
-        function followUser() {
-            this.followers++;
-        }
+        const followUser = () => state.followers++
 
         function toggleFavourite(id) {
             console.log('id', id)
