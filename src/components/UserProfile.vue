@@ -1,25 +1,25 @@
 <template>
   <div>
     <p>@{{ fullname }}</p>
-    <p class="user-profile-admin" v-if="user.isAdmin">Admin</p>
-    <strong>Followers {{ followers }}</strong>
+    <p class="user-profile-admin" v-if="state.user.isAdmin">Admin</p>
+    <strong>Followers {{ state.followers }}</strong>
     <button @click="followUser">Follow</button>
-    <div v-for="(tweet, index) in user.tweets" :key="index">
+    <div v-for="(tweet, index) in state.user.tweets" :key="index">
         <TweetItem
-            :username="user.username"
+            :username="state.user.username"
             :tweet="tweet"
             @favourite="toggleFavourite" />
     </div>
     <form class="tweet-form" @submit.prevent="createNewTweet">
         <label for="newTweet"><strong>New Tweet</strong></label>
-        <textarea id="newTweet" rows="4" v-model="newTweet.content"></textarea>
+        <textarea id="newTweet" rows="4" v-model="state.newTweet.content"></textarea>
 
         <div>
             <label for="newTweetType"><strong>Type: </strong></label>
-            <select id="newTweetType" v-model="newTweet.type">
+            <select id="newTweetType" v-model="state.newTweet.type">
                 <option
                     :value="option.value"
-                    v-for="(option, index) in tweetTypes"
+                    v-for="(option, index) in state.tweetTypes"
                     :key="index" >
                     {{ option.name }}
                 </option>
@@ -32,11 +32,12 @@
 
 <script>
 import TweetItem from "./TweetItem.vue"
+import { reactive, computed } from "vue"
 
 export default {
     name: "UserProfile",
-    data() {
-        return {
+    setup() {
+        const state = reactive({
             newTweet: { type: 'instant', content: '' },
             tweetTypes: [
                 { value: 'draft', name: 'Draft' },
@@ -55,30 +56,38 @@ export default {
                     { id: 3, content: "Third Tweet" }
                 ]
             }
-        };
-    },
-    computed: {
-        fullname() {
-            return `${this.user.firstName} ${this.user.lastName}`;
-        }
-    },
-    methods: {
-        followUser() {
+        })
+
+        const fullname = computed(() => {
+            return `${state.user.firstName} ${state.user.lastName}`
+        })
+
+        function followUser() {
             this.followers++;
-        },
-        toggleFavourite(id) {
+        }
+
+        function toggleFavourite(id) {
             console.log('id', id)
-        },
-        createNewTweet() {
-            if(this.newTweet.content){
-                console.log('tweet type', this.newTweet.type)
-                console.log('tweet content', this.newTweet.content)
-                this.user.tweets.unshift({
-                    id: this.newTweet.content.length,
-                    content: this.newTweet.content
+        }
+
+        function createNewTweet() {
+            if(state.newTweet.content){
+                console.log('tweet type', state.newTweet.type)
+                console.log('tweet content', state.newTweet.content)
+                this.state.user.tweets.unshift({
+                    id: state.newTweet.content.length,
+                    content: state.newTweet.content
                     }
                 )
             }
+        }
+
+        return {
+            state,
+            fullname,
+            followUser,
+            toggleFavourite,
+            createNewTweet
         }
     },
     mounted() {

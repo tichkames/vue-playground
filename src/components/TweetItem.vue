@@ -7,6 +7,14 @@
 <script>
 export default {
   name: 'TweetItem',
+  setup(props, ctx) {
+        function favouriteTweet(id) {
+            ctx.emit('favourite', id)
+        }
+      return {
+          favouriteTweet
+      }
+  },
     props: {
         username: {
             type: String,
@@ -15,11 +23,6 @@ export default {
         tweet: {
             type: Object,
             required: true
-        }
-    },
-    methods: {
-        favouriteTweet(id) {
-            this.$emit('favourite', id)
         }
     }
 }
