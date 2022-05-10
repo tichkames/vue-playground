@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <p v-if="user">Logged In user: {{ user.username }}</p>
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/admin">Admin</router-link>
@@ -15,13 +16,18 @@
 </template>
 
 <script>
+import { computed } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 import { users } from "./assets/users"
 
 export default {
   name: 'App',
   setup () {
+    const store = useStore()
+    const user = computed(() => store.state.user.user)
     return {
-      users
+      users,
+      user
     }
   }
 }
