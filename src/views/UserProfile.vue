@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import TweetItem from "./TweetItem.vue"
 import { reactive, computed } from "vue"
+import TweetItem from "@/components/TweetItem.vue"
 
 export default {
     name: "UserProfile",
