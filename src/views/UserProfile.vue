@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>@{{ fullname }}</p>
+    <p>User ID {{ userId }}</p>
     <p class="user-profile-admin" v-if="state.user.isAdmin">Admin</p>
     <strong>Followers {{ state.followers }}</strong>
     <button @click="followUser">Follow</button>
@@ -33,10 +34,15 @@
 <script>
 import { reactive, computed } from "vue"
 import TweetItem from "@/components/TweetItem.vue"
+import { useRoute } from "vue-router"
+import { users } from "@/assets/users"
 
 export default {
     name: "UserProfile",
     setup() {
+        const route = useRoute();
+        const userId = computed(() => route.params.userId)
+
         const state = reactive({
             newTweet: { type: 'instant', content: '' },
             tweetTypes: [
@@ -44,18 +50,7 @@ export default {
                 { value: 'instant', name: 'Instant' }
             ],
             followers: 0,
-            user: {
-                id: 1,
-                username: "tichkames",
-                firstName: "Tich",
-                lastName: "Kames",
-                isAdmin: true,
-                tweets: [
-                    { id: 1, content: "First Tweet" },
-                    { id: 2, content: "Second Tweet" },
-                    { id: 3, content: "Third Tweet" }
-                ]
-            }
+            user: users[userId.value - 1] || users[0]
         })
 
         const fullname = computed(() => {
@@ -85,7 +80,8 @@ export default {
             fullname,
             followUser,
             toggleFavourite,
-            createNewTweet
+            createNewTweet,
+            userId
         }
     },
     mounted() {
